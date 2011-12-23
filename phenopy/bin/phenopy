@@ -1,0 +1,90 @@
+#!/usr/bin/env python
+import sys, os
+import phenopy.components
+import phenopy.misc as misc
+
+global commands
+
+indent = ' '*2
+
+class ShowHelp(Exception):
+    def __init__(self, who):
+        self.who = who
+
+    def help(self):
+        hasattr(self.who,'help') and self.who.help()
+
+def compgen():
+    p = misc.get_abs_module_path(phenopy.components)
+    return (x for x in os.listdir(p) if os.path.isdir(os.path.join(p,x)))
+
+class show_help(object):
+
+    def help(self):
+        print 'Usage: phenopy command [command-options]'
+        print 'List of avalaible commands:'
+        print '\n'.join( (indent+'%-18s  : %s'%(x,v) for x,v in commands.iteritems()) )
+
+    def __call__(self):
+        self.help()
+
+    def __repr__(self):
+        return 'Shows help'
+
+class list_components(object):
+    
+    def help(self):
+        pass
+
+    def __call__(self):
+        print '\n'.join( (indent+' - '+str(x) for x in compgen() ) )
+
+    def __repr__(self):
+        return 'Shows avalaible components list'
+
+class lc(list_components):
+    def __repr__(self):
+        return 'Short alias for list-components'
+
+
+class  install_component(object):
+    
+    def help(self):
+        print '''Usage: phenopy install-component|ic  [component-name|help] '''
+
+    def __call__(self):
+        if not len(sys.argv[2:]) or sys.argv[2:][0] == 'help':
+            raise ShowHelp(self)
+        comp = sys.argv[2:][0]
+        if comp in set( compgen() ):
+            m = __import__('phenopy.components.'+comp+'.install', fromlist=['install'])
+            m.install()
+
+    def __repr__(self):
+        return 'Shows avalaible components list'
+
+class ic(install_component):
+    def __repr__(self):
+        return 'Short alias for install-component'
+
+
+commands = {
+    'help' : show_help(),
+    'lc'   : lc(),
+    'list-components' : list_components(),
+    'install-component' : install_component(),
+    'ic'                : ic(),
+}
+
+if __name__ == "__main__":
+
+
+    if len(sys.argv) <= 1:
+        commands['help']()
+    else:
+        try:
+            ((commands.has_key(sys.argv[1]) and commands[sys.argv[1]]) or commands['help'])()
+        except ShowHelp, e:
+            e.help()
+
+            

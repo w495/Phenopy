@@ -1,0 +1,18 @@
+Metadata-Version: 1.0
+Name: phenopy
+Version: 0.1.20
+Summary: Misc stuffs
+Home-page: UNKNOWN
+Author: Dmitry Zuikov
+Author-email: dmz@phenopy.net
+License: LGPL License
+Description: 
+            Misc stuffs
+        
+Keywords: wsgi web sql postgres aop
+Platform: any
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: Web Environment
+Classifier: License :: OSI Approved :: LGPL License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
