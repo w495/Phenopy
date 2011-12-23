@@ -29,6 +29,7 @@ class generic_decorator(object):
            
             args, varargs, varkw, defaults = inspect.getargspec(orig_func)
             parameters = inspect.formatargspec(args, varargs, varkw, defaults)[1:-1]
+
     
             wrapper_func_str = """
 def %s(%s):
@@ -50,9 +51,9 @@ def %s(%s):
             exec_dict[orig_func.__name__] = orig_func
             exec_dict['orig_func'] = orig_func
             exec_dict['caller'] = self
-            exec_dict['attr_args'] = attr_args        
-            exec_dict['attr_kwargs'] = attr_kwargs     
-
+            exec_dict['attr_args'] = attr_args
+            exec_dict['attr_kwargs'] = attr_kwargs
+            
             exec wrapper_func_str in exec_dict
             wrapper_func = locals()[orig_func.__name__]
             wrapper_func.__doc__ = orig_func.__doc__

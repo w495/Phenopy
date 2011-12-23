@@ -7,6 +7,7 @@ import md5
 class settings(object):
     url = '127.0.0.1:11211'
     enable_cache = True
+    profile = ""
 
 #FIXME: remove hardcode
 _cache = memcache.Client([settings.url], debug=0)
@@ -44,6 +45,7 @@ class argcached(generic_decorator):
 		    key = key + str(val)
 
 	key = self.orig_func.__name__ + "_" + md5.md5(key).hexdigest()
+	key = key + "__" + settings.profile
         res = _cache.get(key)
 
 

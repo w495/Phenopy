@@ -6,7 +6,7 @@ from colubrid import HttpResponse
 from colubrid.exceptions import HttpFound
 from phenopy.decorators import generic_decorator
 from phenopy.webutils.cookies import Cookies
-import os, os.path, sys, datetime
+import os, os.path, sys, datetime, random
 import libxslt, libxml2, time, re
 
 class settings(object):
@@ -65,6 +65,7 @@ class render(generic_decorator):
                 self.func_self.cookies = Cookies()
 
             c = self.orig_func(**self.func_kwargs) or {}
+            c['random-value']=int(random.random()*256)
 
             time_proc = 0
             results = None
@@ -99,9 +100,9 @@ class render(generic_decorator):
                 result_dom = xslt.apply_to_doc(dom)
                 result_dom = self._postprocess_dom(result_dom)
                 results = result_dom.serialize(format=format, encoding=settings.charset)
+                result_dom.freeDoc()
 
-
-                if cut_xml_header or settings.cut_xml_header:
+                if cut_xml_header:
                     results = re.sub(r'(<\?xml.+\?>)','',results,1)
 
                 results = re.sub(r'xmlns=""','',results)
@@ -156,6 +157,7 @@ class html_render(generic_decorator):
     def __call__(self,  template,
                         format=True,
                         debug=False,
+                        cut_xml_header=False,
                         root_tag="data"):
 
         path = settings.searchpath
@@ -182,6 +184,8 @@ class html_render(generic_decorator):
         result_dom = xslt.apply_to_doc(dom)
 
         results = result_dom.serialize(format=format, encoding=settings.charset)
+        if cut_xml_header:                                                                                                                                                                                                           
+            results = re.sub(r'(<\?xml.+\?>)','',results,1) 
         time_proc_elapsed = time.time() - time_proc
 
         del dom

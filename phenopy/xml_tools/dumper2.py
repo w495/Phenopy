@@ -22,7 +22,7 @@ class XML_Dumper(object):
             except KeyError:
                 object_name = self.re_repl_camel2.sub(lambda x:self.replace_tbl[x.group(1)], name)
                 object_name = object_name.replace('_','-').lower()
-                _names[name] = object_name 
+                _names[name] = object_name
 
             tp = type(object)
             nm = tp.__name__
@@ -137,6 +137,10 @@ class XML_Dumper(object):
 class SomeTestClass(object):
     pass
 
+    @property
+    def qqq(self):
+        return 'LALALALA'
+
     def some_method(self):
         return True
 
@@ -168,5 +172,5 @@ if __name__ == "__main__":
                    type_hooks={datetime.datetime.__name__ :  lambda a,b: b.newProp('year', str(a.year))  })
 
     for i in xrange(0, 100):
-        x.to_dom( sequence=[SomeTestClass() for i in xrange(0,100)] )
-#        print x.to_string( sequence=[SomeTestClass() for i in xrange(0,100)] )
+#        x.to_dom( sequence=[SomeTestClass() for i in xrange(0,100)] )
+        print x.to_string( sequence=[SomeTestClass() for i in xrange(0,100)] )

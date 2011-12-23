@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python26
 # -*- coding: utf-8 -*-
 from setuptools import setup
 import phenopy

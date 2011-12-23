@@ -1,5 +1,6 @@
 import new,re
 from datetime import datetime, date, timedelta
+import sys, os
 
 import inspect
 
@@ -28,8 +29,6 @@ def guard(object):
         del self.o
 
  
-
-
 class fancy_time_delta(object):
     def __init__(self, n1, n2):
         delta =  n2 - n1
@@ -37,4 +36,9 @@ class fancy_time_delta(object):
         self.hours = delta.seconds / 3600
         self.minutes = (delta.seconds % 3600 ) / 60
 
+def get_abs_module_path(obj):
+    return os.path.realpath(os.path.split(inspect.getfile(obj))[0:-1][0])
+
+def add_relative_module_path(obj, rel_path):
+    sys.path.append(os.path.realpath(os.path.join(os.path.split(inspect.getfile(obj))[0:-1][0],rel_path)))
 

@@ -1,12 +1,17 @@
 from markdown import Markdown
+import markdown
 import re
 
 class CDATA(object):
     pass
 
-def markdown_cdata_format(text):
+def markdown_cdata_format(text, safe_mode=True):
     cdata = CDATA()
-    cdata.content =  Markdown(text, safe_mode = True).convert().encode('utf-8')
+    
+    # Markdown changed syntax - test which case will work
+    #cdata.content =  Markdown(text, safe_mode = safe_mode).convert().encode('utf-8')
+    cdata.content =  markdown.markdown(text, safe_mode = safe_mode).encode('utf-8')
+
     return cdata
 
 def quote_markdown(text):
